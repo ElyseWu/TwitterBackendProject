@@ -13,7 +13,7 @@ TWEET_RETRIEVE_API = '/api/tweets/{}/'
 class TweetApiTests(TestCase):
 
     def setUp(self):
-        self.anonyous_client = APIClient()
+        self.anonymous_client = APIClient()
 
         # super(TweetApiTests, self).setUp()
         self.user1 = self.create_user('user1', 'user1@twitter.com')
