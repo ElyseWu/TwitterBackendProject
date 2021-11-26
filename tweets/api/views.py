@@ -5,7 +5,7 @@ from tweets.models import Tweet
 from tweets.api.serializers import (
     TweetSerializer,
     TweetSerializerForCreate,
-    TweetSerializerWithComments
+    TweetSerializerForDetail,
 )
 from newsfeeds.services import NewsFeedService
 from utils.decorators import required_params
@@ -21,8 +21,11 @@ class TweetViewSet(viewsets.GenericViewSet):
         return [IsAuthenticated()]
 
     def retrieve(self, request, *args, **kwargs):
-        tweet = self.get_object()
-        return Response(TweetSerializerWithComments(tweet).data)
+        serializer = TweetSerializerForDetail(
+            self.get_object(),
+            context={'request': request},
+        )
+        return Response(serializer.data)
 
     @required_params(params=['user_id'])
     def list(self, request, *args, **kwargs):
