@@ -29,7 +29,11 @@ class TweetViewSet(viewsets.GenericViewSet):
         tweets = Tweet.objects.filter(
             user_id=request.query_params['user_id']
         ).order_by('-created_at')
-        serializer = TweetSerializer(tweets, many=True)
+        serializer = TweetSerializer(
+            tweets,
+            context={'request': request},
+            many=True,
+        )
         return Response({'tweets': serializer.data})
 
     # def list(self, request):
@@ -40,18 +44,18 @@ class TweetViewSet(viewsets.GenericViewSet):
     #     serializer = TweetSerializer(tweets, many=True)
     #     return Response({'tweets': serializer.data})
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
         serializer = TweetSerializerForCreate(
             data=request.data,
             context={'request': request},
         )
         if not serializer.is_valid():
             return Response({
-                "success": False,
-                "message": "Please check input",
-                "errors": serializer.errors,
+                'success': False,
+                'message': "Please check input",
+                'errors': serializer.errors,
             }, status=400)
-        # save will trigger create method in TweetSerializerForCreate
         tweet = serializer.save()
         NewsFeedService.fanout_to_followers(tweet)
-        return Response(TweetSerializer(tweet).data, status=201)
+        serializer = TweetSerializer(tweet, context={'request': request})
+        return Response(serializer.data, status=201)
