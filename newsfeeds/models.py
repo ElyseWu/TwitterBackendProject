@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import models
 from django.contrib.auth.models import User
 from tweets.models import Tweet
 
@@ -12,14 +13,7 @@ class NewsFeed(models.Model):
     class Meta:
         index_together = (('user', 'created_at'),)
         unique_together = (('user', 'tweet'),)
-        ordering = ('-created_at',)
+        ordering = ('user', '-created_at',)
 
     def __str__(self):
         return f'{self.created_at} inbox of {self.user}: {self.tweet}'
-
-#     @property
-#     def cached_tweet(self):
-#         return MemcachedHelper.get_object_through_cache(Tweet, self.tweet_id)
-#
-#
-# post_save.connect(push_newsfeed_to_cache, sender=NewsFeed)

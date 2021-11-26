@@ -1,23 +1,7 @@
-from accounts.api.serializers import UserSerializerForFriendship
+from accounts.api.serializers import UserSerializer
 from friendships.models import Friendship
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-
-
-class FollowerSerializer(serializers.ModelSerializer):
-    user = UserSerializerForFriendship(source='from_user')
-
-    class Meta:
-        model = Friendship
-        fields = ('user', 'created_at')
-
-
-class FollowingSerializer(serializers.ModelSerializer):
-    user = UserSerializerForFriendship(source='to_user')
-
-    class Meta:
-        model = Friendship
-        fields = ('user', 'created_at')
 
 
 class FriendshipSerializerForCreate(serializers.ModelSerializer):
@@ -28,18 +12,10 @@ class FriendshipSerializerForCreate(serializers.ModelSerializer):
         model = Friendship
         fields = ('from_user_id', 'to_user_id')
 
-    # users cannot follow themselves, or follow twice
     def validate(self, attrs):
         if attrs['from_user_id'] == attrs['to_user_id']:
             raise ValidationError({
-                'message': 'You cannot follow yourself.'
-            })
-        if Friendship.objects.filter(
-            from_user_id=attrs['from_user_id'],
-            to_user_id=attrs['to_user_id'],
-        ).exists():
-            raise ValidationError({
-                'message': 'You have already followed this user.'
+                'message': 'from_user_id and to_user_id should be different'
             })
         return attrs
 
@@ -50,3 +26,21 @@ class FriendshipSerializerForCreate(serializers.ModelSerializer):
             from_user_id=from_user_id,
             to_user_id=to_user_id,
         )
+
+
+class FollowerSerializer(serializers.ModelSerializer):
+    user = UserSerializer(source='from_user')
+    created_at = serializers.DateTimeField()
+
+    class Meta:
+        model = Friendship
+        fields = ('user', 'created_at')
+
+
+class FollowingSerializer(serializers.ModelSerializer):
+    user = UserSerializer(source='to_user')
+    created_at = serializers.DateTimeField()
+
+    class Meta:
+        model = Friendship
+        fields = ('user', 'created_at')

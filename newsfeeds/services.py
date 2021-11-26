@@ -1,5 +1,5 @@
-from friendships.services import FriendshipService
 from newsfeeds.models import NewsFeed
+from friendships.services import FriendshipService
 
 
 class NewsFeedService(object):
@@ -12,5 +12,3 @@ class NewsFeedService(object):
         ]
         newsfeeds.append(NewsFeed(user=tweet.user, tweet=tweet))
         NewsFeed.objects.bulk_create(newsfeeds)
-
-        # fanout_newsfeeds_main_task.delay(tweet.id, tweet.timestamp, tweet.user_id)

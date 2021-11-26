@@ -1,9 +1,8 @@
-from newsfeeds.api.serializers import NewsFeedSerializer
-from newsfeeds.models import NewsFeed
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import permission_classes
+from newsfeeds.models import NewsFeed
+from newsfeeds.api.serializers import NewsFeedSerializer
 
 
 class NewsFeedViewSet(viewsets.GenericViewSet):

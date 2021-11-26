@@ -5,25 +5,7 @@ from rest_framework import serializers, exceptions
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email')
-
-
-class UserSerializerForTweet(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
-
-
-class UserSerializerForFriendship(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
-
-
-class UserSerializerForComment(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'email')
 
 
 class SignupSerializer(serializers.ModelSerializer):
@@ -35,7 +17,6 @@ class SignupSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'email', 'password')
 
-    # will be called when is_valid is called
     def validate(self, data):
         if User.objects.filter(username=data['username'].lower()).exists():
             raise exceptions.ValidationError({
@@ -44,13 +25,14 @@ class SignupSerializer(serializers.ModelSerializer):
         if User.objects.filter(email=data['email'].lower()).exists():
             raise exceptions.ValidationError({
                 'message': 'This email address has been occupied.'
-        })
+            })
         return data
 
     def create(self, validated_data):
         username = validated_data['username'].lower()
         email = validated_data['email'].lower()
         password = validated_data['password']
+
         user = User.objects.create_user(
             username=username,
             email=email,

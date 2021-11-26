@@ -10,13 +10,13 @@ from friendships.api.serializers import (
 )
 from django.contrib.auth.models import User
 
+
 class FriendshipViewSet(viewsets.GenericViewSet):
     serializer_class = FriendshipSerializerForCreate
     queryset = User.objects.all()
 
     @action(methods=['GET'], detail=True, permission_classes=[AllowAny])
     def followers(self, request, pk):
-        # api/friendships/followers
         friendships = Friendship.objects.filter(to_user_id=pk).order_by('-created_at')
         serializer = FollowerSerializer(friendships, many=True)
         return Response(
@@ -33,43 +33,33 @@ class FriendshipViewSet(viewsets.GenericViewSet):
             status=status.HTTP_200_OK,
         )
 
-    # list can combine followers and followings together
-    def list(self,request):
-        return Response({'message': 'this is friendships home page'})
-
     @action(methods=['POST'], detail=True, permission_classes=[IsAuthenticated])
     def follow(self, request, pk):
-        # if Friendship.objects.filter(from_user=request.user, to_user=pk).exists():
-        #     return Response({
-        #         'success': True,
-        #         'duplicate': True,
-        #     }, status=status.HTTP_201_CREATED)
-        # check if the to_user_id exists
-        self.get_object()
-        # pk: api/friendships/<pk>/follow
+        if Friendship.objects.filter(from_user=request.user, to_user=pk).exists():
+            return Response({
+                'success': True,
+                'duplicate': True,
+            }, status=status.HTTP_201_CREATED)
         serializer = FriendshipSerializerForCreate(data={
             'from_user_id': request.user.id,
             'to_user_id': pk,
         })
-
         if not serializer.is_valid():
             return Response({
                 'success': False,
                 'errors': serializer.errors,
             }, status=status.HTTP_400_BAD_REQUEST)
-        instance = serializer.save()
-        return Response(FollowingSerializer(instance).data,
-                        status=status.HTTP_201_CREATED)
+        serializer.save()
+        return Response({'success': True}, status=status.HTTP_201_CREATED)
 
     @action(methods=['POST'], detail=True, permission_classes=[IsAuthenticated])
     def unfollow(self, request, pk):
-        # raise 404 if no user's id equals to pk
-        unfollow_user = self.get_object()
-        if request.user.id == unfollow_user:
+        if request.user.id == int(pk):
             return Response({
                 'success': False,
                 'message': 'You cannot unfollow yourself',
             }, status=status.HTTP_400_BAD_REQUEST)
+        # https://docs.djangoproject.com/en/3.1/ref/models/querysets/#delete
         deleted, _ = Friendship.objects.filter(
             from_user=request.user,
             to_user=pk,

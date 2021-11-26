@@ -28,4 +28,3 @@ class Like(models.Model):
             self.content_type,
             self.object_id,
         )
-

@@ -81,6 +81,5 @@ class TweetApiTests(TestCase):
 
         self.create_comment(self.user2, tweet, 'ah oh..')
         self.create_comment(self.user1, tweet, 'hmm...')
-        self.create_comment(self.user1, self.create_tweet(self.user2), 'well...')
         response = self.anonymous_client.get(url)
         self.assertEqual(len(response.data['comments']), 2)
