@@ -3,11 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="04f4baaf-0547-4182-b72a-b237bde3d2d1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/comments/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/comments/api/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/friendships/api/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/friendships/api/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweets/api/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/tweets/api/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweets/api/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/tweets/api/test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tweets/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/tweets/api/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/comments/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/comments/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/comments/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/comments/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/testing/testcases.py" beforeDir="false" afterPath="$PROJECT_DIR$/testing/testcases.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tweets/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/tweets/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tweets/tests.py" beforeDir="false" afterPath="$PROJECT_DIR$/tweets/tests.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/twitter/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/twitter/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +54,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Django tests.Test: friendships.api.test.FriendshipApiTests">
+  <component name="RunManager" selected="Django tests.Test: tweets.tests.TweetTests">
     <configuration name="Test: accounts.api.tests.AccountApiTests" type="DjangoTestsConfigurationType" temporary="true">
       <module name="twitter-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -73,7 +75,7 @@
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: comments.api.test.CommentApiTests.test_list" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: comments.tests.CommentModelTests" type="DjangoTestsConfigurationType" temporary="true">
       <module name="twitter-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -86,7 +88,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="comments.api.test.CommentApiTests.test_list" />
+      <option name="TARGET" value="comments.tests.CommentModelTests" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
@@ -113,7 +115,7 @@
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: newsfeeds.api.test.NewsFeedApiTests" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: testing.testcases.TestCase" type="DjangoTestsConfigurationType" temporary="true">
       <module name="twitter-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -126,14 +128,14 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="newsfeeds.api.test.NewsFeedApiTests" />
+      <option name="TARGET" value="testing.testcases.TestCase" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
       <option name="OPTIONS" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="Test: tweets.api.test.TweetApiTests" type="DjangoTestsConfigurationType" temporary="true">
+    <configuration name="Test: tweets.tests.TweetTests" type="DjangoTestsConfigurationType" temporary="true">
       <module name="twitter-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -146,7 +148,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="TARGET" value="tweets.api.test.TweetApiTests" />
+      <option name="TARGET" value="tweets.tests.TweetTests" />
       <option name="SETTINGS_FILE" value="" />
       <option name="CUSTOM_SETTINGS" value="false" />
       <option name="USE_OPTIONS" value="false" />
@@ -179,11 +181,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Django tests.Test: tweets.tests.TweetTests" />
+        <item itemvalue="Django tests.Test: comments.tests.CommentModelTests" />
+        <item itemvalue="Django tests.Test: testing.testcases.TestCase" />
         <item itemvalue="Django tests.Test: friendships.api.test.FriendshipApiTests" />
         <item itemvalue="Django tests.Test: accounts.api.tests.AccountApiTests" />
-        <item itemvalue="Django tests.Test: tweets.api.test.TweetApiTests" />
-        <item itemvalue="Django tests.Test: newsfeeds.api.test.NewsFeedApiTests" />
-        <item itemvalue="Django tests.Test: comments.api.test.CommentApiTests.test_list" />
       </list>
     </recent_temporary>
   </component>
@@ -212,7 +214,7 @@
       <workItem from="1637436837577" duration="4163000" />
       <workItem from="1637449608010" duration="2820000" />
       <workItem from="1637781732648" duration="4291000" />
-      <workItem from="1637878889486" duration="8052000" />
+      <workItem from="1637878889486" duration="11074000" />
     </task>
     <servers />
   </component>
@@ -240,7 +242,10 @@
     <SUITE FILE_PATH="coverage/twitter_project$manage.coverage" NAME="manage Coverage Results" MODIFIED="1637437041863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/twitter_project$Test__comments_api_test_CommentApiTests.coverage" NAME="Test: comments.api.test.CommentApiTests Coverage Results" MODIFIED="1637879357756" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/twitter_project$Test__testing_testcases_TestCase.coverage" NAME="Test: testing.testcases.TestCase Coverage Results" MODIFIED="1637889334085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+<<<<<<< HEAD
     <SUITE FILE_PATH="coverage/twitter_project$Test__likes_api_tests_LikeApiTests.coverage" NAME="Test: likes.api.tests.LikeApiTests Coverage Results" MODIFIED="1637961694974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+=======
+>>>>>>> e4a555f4816c5a3732e8fba778622fd050f50ba9
     <SUITE FILE_PATH="coverage/twitter_project$Test__tweets_tests_TweetTests.coverage" NAME="Test: tweets.tests.TweetTests Coverage Results" MODIFIED="1637889936983" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/twitter_project$Test__tweets_api_tests_TweetApiTests.coverage" NAME="Test: tweets.api.tests.TweetApiTests Coverage Results" MODIFIED="1637282025360" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/twitter_project$Test__comments_api_test_CommentApiTests_test_update.coverage" NAME="Test: comments.api.test.CommentApiTests.test_update Coverage Results" MODIFIED="1637879170501" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
