@@ -1,6 +1,6 @@
 from accounts.api.serializers import UserSerializer
 from comments.models import Comment
-from likes.services import LikeService
+from likess.services import LikeService
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from tweets.models import Tweet

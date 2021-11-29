@@ -1,7 +1,7 @@
 from accounts.api.serializers import UserSerializer
 from comments.api.serializers import CommentSerializer
-from likes.api.serializers import LikeSerializer
-from likes.services import LikeService
+from likess.api.serializers import LikeSerializer
+from likess.services import LikeService
 from rest_framework import serializers
 from tweets.models import Tweet
 
@@ -60,7 +60,7 @@ class TweetSerializerForDetail(TweetSerializer):
             'comments',
             'created_at',
             'content',
-            'likes',
+            'likess',
             'comments',
             'likes_count',
             'comments_count',

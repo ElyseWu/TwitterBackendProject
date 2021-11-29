@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # third party
     'rest_framework',
     'django_filters',
+    'notifications',
 
     # project apps
     'accounts',
@@ -48,7 +49,8 @@ INSTALLED_APPS = [
     'friendships',
     'newsfeeds',
     'comments',
-    'likes',
+    'likess',
+    'inbox',
 ]
 
 REST_FRAMEWORK = {
