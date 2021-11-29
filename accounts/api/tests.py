@@ -1,4 +1,5 @@
 from accounts.models import UserProfile
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
 from testing.testcases import TestCase
 
@@ -7,6 +8,7 @@ LOGIN_URL = '/api/accounts/login/'
 LOGOUT_URL = '/api/accounts/logout/'
 SIGNUP_URL = '/api/accounts/signup/'
 LOGIN_STATUS_URL = '/api/accounts/login_status/'
+USER_PROFILE_DETAIL_URL = '/api/profiles/{}/'
 
 
 class AccountApiTests(TestCase):
@@ -16,7 +18,7 @@ class AccountApiTests(TestCase):
         self.client = APIClient()
         self.user = self.create_user(
             username='admin',
-            email='admin@jiuzhang.com',
+            email='admin@twitter.com',
             password='correct password',
         )
 
@@ -46,7 +48,7 @@ class AccountApiTests(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertNotEqual(response.data['user'], None)
-        self.assertEqual(response.data['user']['email'], 'admin@jiuzhang.com')
+        self.assertEqual(response.data['user']['id'], self.user.id)
         # check if the user already logged in
         response = self.client.get(LOGIN_STATUS_URL)
         self.assertEqual(response.data['has_logged_in'], True)
@@ -75,7 +77,7 @@ class AccountApiTests(TestCase):
     def test_signup(self):
         data = {
             'username': 'someone',
-            'email': 'someone@jiuzhang.com',
+            'email': 'someone@twitter.com',
             'password': 'any password',
         }
 
@@ -94,7 +96,7 @@ class AccountApiTests(TestCase):
         # test short password
         response = self.client.post(SIGNUP_URL, {
             'username': 'someone',
-            'email': 'someone@jiuzhang.com',
+            'email': 'someone@twitter.com',
             'password': '123',
         })
         # print(response.data)
@@ -103,7 +105,7 @@ class AccountApiTests(TestCase):
         # test long user name
         response = self.client.post(SIGNUP_URL, {
             'username': 'username is tooooooooooooooooo loooooooong',
-            'email': 'someone@jiuzhang.com',
+            'email': 'someone@twitter.com',
             'password': 'any password',
         })
         # print(response.data)
@@ -122,3 +124,43 @@ class AccountApiTests(TestCase):
         # check if logged in the user automatically
         response = self.client.get(LOGIN_STATUS_URL)
         self.assertEqual(response.data['has_logged_in'], True)
+
+
+class UserProfileAPITests(TestCase):
+
+    def test_update(self):
+        jesse, jesse_client = self.create_user_and_client('jesse')
+        p = jesse.profile
+        p.nickname = 'old nickname'
+        p.save()
+        url = USER_PROFILE_DETAIL_URL.format(p.id)
+
+        # test can only be updated by user himself.
+        _, eliza_client = self.create_user_and_client('eliza')
+        response = eliza_client.put(url, {
+            'nickname': 'a new nickname',
+        })
+        self.assertEqual(response.status_code, 403)
+        p.refresh_from_db()
+        self.assertEqual(p.nickname, 'old nickname')
+
+        # update nickname
+        response = jesse_client.put(url, {
+            'nickname': 'a new nickname',
+        })
+        self.assertEqual(response.status_code, 200)
+        p.refresh_from_db()
+        self.assertEqual(p.nickname, 'a new nickname')
+
+        # update avatar
+        response = jesse_client.put(url, {
+            'avatar': SimpleUploadedFile(
+                name='my-avatar.jpg',
+                content=str.encode('a fake image'),
+                content_type='image/jpeg',
+            ),
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual('my-avatar' in response.data['avatar'], True)
+        p.refresh_from_db()
+        self.assertIsNotNone(p.avatar)
