@@ -1,4 +1,3 @@
-from newsfeeds.models import NewsFeed
 from friendships.models import Friendship
 from rest_framework.test import APIClient
 from testing.testcases import TestCase
@@ -20,7 +19,7 @@ class NewsFeedApiTests(TestCase):
         self.eliza_client = APIClient()
         self.eliza_client.force_authenticate(self.eliza)
 
-
+        # create followings and followers for eliza
         for i in range(2):
             follower = self.create_user('eliza_follower{}'.format(i))
             Friendship.objects.create(from_user=follower, to_user=self.eliza)

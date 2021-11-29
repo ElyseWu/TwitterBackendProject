@@ -5,11 +5,10 @@ from comments.api.serializers import (
     CommentSerializerForUpdate,
 )
 from comments.models import Comment
+from inbox.services import NotificationService
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-
-from inbox.services import NotificationService
 from utils.decorators import required_params
 
 

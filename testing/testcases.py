@@ -19,7 +19,7 @@ class TestCase(DjangoTestCase):
 
     def create_user(self, username, email=None, password=None):
         if email is None:
-            email = '{}@jiuzhang.com'.format(username)
+            email = '{}@twitter.com'.format(username)
         if password is None:
             password = 'generic password'
         return User.objects.create_user(username, email, password)
