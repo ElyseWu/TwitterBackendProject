@@ -1,6 +1,6 @@
+from accounts.models import UserProfile
 from django.contrib.auth.models import User
 from rest_framework import serializers, exceptions
-from accounts.models import UserProfile
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -27,15 +27,15 @@ class UserSerializerForTweet(UserSerializerWithProfile):
     pass
 
 
-class UserSerializerForLike(UserSerializerWithProfile):
-    pass
-
-
 class UserSerializerForComment(UserSerializerWithProfile):
     pass
 
 
 class UserSerializerForFriendship(UserSerializerWithProfile):
+    pass
+
+
+class UserSerializerForLike(UserSerializerWithProfile):
     pass
 
 

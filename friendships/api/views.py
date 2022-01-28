@@ -1,41 +1,53 @@
+from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
+from friendships.api.serializers import (
+    FollowerSerializer,
+    FollowingSerializer,
+    FriendshipSerializerForCreate,
+)
+from friendships.models import HBaseFollowing, HBaseFollower, Friendship
+from friendships.services import FriendshipService
+from gatekeeper.models import GateKeeper
+from ratelimit.decorators import ratelimit
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from friendships.models import Friendship
-from friendships.api.serializers import (
-    FollowingSerializer,
-    FollowerSerializer,
-    FriendshipSerializerForCreate,
-)
-from django.contrib.auth.models import User
+from utils.paginations import EndlessPagination
 
 
 class FriendshipViewSet(viewsets.GenericViewSet):
-    serializer_class = FriendshipSerializerForCreate
     queryset = User.objects.all()
+    pagination_class = EndlessPagination
 
     @action(methods=['GET'], detail=True, permission_classes=[AllowAny])
+    @method_decorator(ratelimit(key='user_or_ip', rate='3/s', method='GET', block=True))
     def followers(self, request, pk):
-        friendships = Friendship.objects.filter(to_user_id=pk).order_by('-created_at')
-        serializer = FollowerSerializer(friendships, many=True)
-        return Response(
-            {'followers': serializer.data},
-            status=status.HTTP_200_OK,
-        )
+        if GateKeeper.is_switch_on('switch_friendship_to_hbase'):
+            page = self.paginator.paginate_hbase(HBaseFollower, (pk,), request)
+        else:
+            friendships = Friendship.objects.filter(to_user_id=pk).order_by('-created_at')
+            page = self.paginate_queryset(friendships)
+
+        serializer = FollowerSerializer(page, many=True, context={'request': request})
+        return self.paginator.get_paginated_response(serializer.data)
 
     @action(methods=['GET'], detail=True, permission_classes=[AllowAny])
+    @method_decorator(ratelimit(key='user_or_ip', rate='3/s', method='GET', block=True))
     def followings(self, request, pk):
-        friendships = Friendship.objects.filter(from_user_id=pk).order_by('-created_at')
-        serializer = FollowingSerializer(friendships, many=True)
-        return Response(
-            {'followings': serializer.data},
-            status=status.HTTP_200_OK,
-        )
+        if GateKeeper.is_switch_on('switch_friendship_to_hbase'):
+            page = self.paginator.paginate_hbase(HBaseFollowing, (pk,), request)
+        else:
+            friendships = Friendship.objects.filter(from_user_id=pk).order_by('-created_at')
+            page = self.paginate_queryset(friendships)
+
+        serializer = FollowingSerializer(page, many=True, context={'request': request})
+        return self.paginator.get_paginated_response(serializer.data)
 
     @action(methods=['POST'], detail=True, permission_classes=[IsAuthenticated])
+    @method_decorator(ratelimit(key='user', rate='10/s', method='POST', block=True))
     def follow(self, request, pk):
-        if Friendship.objects.filter(from_user=request.user, to_user=pk).exists():
+        if FriendshipService.has_followed(request.user.id, int(pk)):
             return Response({
                 'success': True,
                 'duplicate': True,
@@ -53,15 +65,12 @@ class FriendshipViewSet(viewsets.GenericViewSet):
         return Response({'success': True}, status=status.HTTP_201_CREATED)
 
     @action(methods=['POST'], detail=True, permission_classes=[IsAuthenticated])
+    @method_decorator(ratelimit(key='user', rate='10/s', method='POST', block=True))
     def unfollow(self, request, pk):
         if request.user.id == int(pk):
             return Response({
                 'success': False,
                 'message': 'You cannot unfollow yourself',
             }, status=status.HTTP_400_BAD_REQUEST)
-        # https://docs.djangoproject.com/en/3.1/ref/models/querysets/#delete
-        deleted, _ = Friendship.objects.filter(
-            from_user=request.user,
-            to_user=pk,
-        ).delete()
+        deleted = FriendshipService.unfollow(request.user.id, int(pk))
         return Response({'success': True, 'deleted': deleted})

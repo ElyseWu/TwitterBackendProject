@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('tweets', '0002_auto_20211116_0035'),
+        ('tweets', '0002_auto_20210426_0742'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

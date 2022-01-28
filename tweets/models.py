@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from likess.models import Like
+from likes.models import Like
 from tweets.constants import TweetPhotoStatus, TWEET_PHOTO_STATUS_CHOICES
 from utils.time_helpers import utc_now
 

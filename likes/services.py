@@ -1,4 +1,4 @@
-from likess.models import Like
+from likes.models import Like
 from django.contrib.contenttypes.models import ContentType
 
 
