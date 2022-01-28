@@ -2,15 +2,16 @@ from notifications.models import Notification
 from testing.testcases import TestCase
 
 COMMENT_URL = '/api/comments/'
-LIKE_URL = '/api/likess/'
+LIKE_URL = '/api/likes/'
 NOTIFICATION_URL = '/api/notifications/'
 
 
 class NotificationTests(TestCase):
 
     def setUp(self):
+        super(NotificationTests, self).setUp()
         self.jesse, self.jesse_client = self.create_user_and_client('jesse')
-        self.eliza, self.eliza_client = self.create_user_and_client('eliza')
+        self.eliza, self.eliza_client = self.create_user_and_client('dong')
         self.eliza_tweet = self.create_tweet(self.eliza)
 
     def test_comment_create_api_trigger_notification(self):
@@ -91,18 +92,14 @@ class NotificationApiTests(TestCase):
             'object_id': comment.id,
         })
 
-        # 匿名用户无法访问 api
         response = self.anonymous_client.get(NOTIFICATION_URL)
         self.assertEqual(response.status_code, 403)
-        # eliza 看不到任何 notifications
         response = self.eliza_client.get(NOTIFICATION_URL)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['count'], 0)
-        # jesse 看到两个 notifications
         response = self.jesse_client.get(NOTIFICATION_URL)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['count'], 2)
-        # 标记之后看到一个未读
         notification = self.jesse.notifications.first()
         notification.unread = False
         notification.save()
@@ -126,30 +123,23 @@ class NotificationApiTests(TestCase):
         notification = self.jesse.notifications.first()
 
         url = '/api/notifications/{}/'.format(notification.id)
-        # post 不行，需要用 put
         response = self.eliza_client.post(url, {'unread': False})
         self.assertEqual(response.status_code, 405)
-        # 不可以被其他人改变 notification 状态
         response = self.anonymous_client.put(url, {'unread': False})
         self.assertEqual(response.status_code, 403)
-        # 因为 queryset 是按照当前登陆用户来，所以会返回 404 而不是 403
         response = self.eliza_client.put(url, {'unread': False})
         self.assertEqual(response.status_code, 404)
-        # 成功标记为已读
         response = self.jesse_client.put(url, {'unread': False})
         self.assertEqual(response.status_code, 200)
         unread_url = '/api/notifications/unread-count/'
         response = self.jesse_client.get(unread_url)
         self.assertEqual(response.data['unread_count'], 1)
 
-        # 再标记为未读
         response = self.jesse_client.put(url, {'unread': True})
         response = self.jesse_client.get(unread_url)
         self.assertEqual(response.data['unread_count'], 2)
-        # 必须带 unread
         response = self.jesse_client.put(url, {'verb': 'newverb'})
         self.assertEqual(response.status_code, 400)
-        # 不可修改其他的信息
         response = self.jesse_client.put(url, {'verb': 'newverb', 'unread': False})
         self.assertEqual(response.status_code, 200)
         notification.refresh_from_db()

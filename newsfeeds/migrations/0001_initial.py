@@ -10,8 +10,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('tweets', '0002_auto_20210426_0742'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('tweets', '0002_auto_20211116_0035'),
     ]
 
     operations = [
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'ordering': ('-created_at',),
+                'ordering': ('user', '-created_at'),
                 'unique_together': {('user', 'tweet')},
                 'index_together': {('user', 'created_at')},
             },

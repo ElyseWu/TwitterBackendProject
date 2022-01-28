@@ -9,13 +9,25 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('tweets', '0002_auto_20211116_0035'),
+        ('tweets', '0002_auto_20210426_0742'),
     ]
 
     operations = [
-        migrations.AlterField(
-            model_name='tweet',
-            name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+        migrations.CreateModel(
+            name='TweetPhoto',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('file', models.FileField(upload_to='')),
+                ('order', models.IntegerField(default=0)),
+                ('status', models.IntegerField(choices=[(0, 'Pending'), (1, 'Approved'), (2, 'Rejected')], default=0)),
+                ('has_deleted', models.BooleanField(default=False)),
+                ('deleted_at', models.DateTimeField(null=True)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('tweet', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='tweets.tweet')),
+                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'index_together': {('tweet', 'order'), ('user', 'created_at'), ('has_deleted', 'created_at'), ('status', 'created_at')},
+            },
         ),
     ]
